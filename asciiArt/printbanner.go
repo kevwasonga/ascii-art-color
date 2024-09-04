@@ -2,7 +2,6 @@ package asciiArt
 
 import (
 	"fmt"
-	"strings"
 
 	"ascii/utils"
 )
@@ -28,6 +27,13 @@ func PrintLineBanner(line, substring, color string, bannerMap map[int][]string) 
 		}
 	}
 
+	// Create a map to identify which characters should be colored
+	colorMap := make(map[rune]bool)
+	for _, char := range substring {
+		colorMap[char] = true
+	}
+
+	// Process each character in the line
 	for _, char := range line {
 		banner, exists := bannerMap[int(char)]
 		if !exists {
@@ -36,7 +42,10 @@ func PrintLineBanner(line, substring, color string, bannerMap map[int][]string) 
 		}
 
 		for i := 0; i < 8; i++ {
-			if substring != "" && strings.ContainsRune(substring, char) {
+			if substring == "" {
+				// Color the entire text
+				output[i] += colorCode + banner[i] + resetCode
+			} else if colorMap[char] {
 				// Color only the specified substring
 				output[i] += colorCode + banner[i] + resetCode
 			} else {
