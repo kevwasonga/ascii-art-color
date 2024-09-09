@@ -23,8 +23,9 @@ func PrintLineBanner(line, substring, color string, bannerMap map[int][]string) 
 		var err error
 		colorCode, err = utils.FindColorANSI(color)
 		if err != nil {
-			fmt.Printf("Invalid color: %s\n", err)
-			colorCode = resetCode // Reset to default if color is invalid
+			fmt.Printf("Invalid color, try another valid color: %s\n", err)
+			return
+			// colorCode = resetCode // Reset to default if color is invalid
 		}
 	}
 
