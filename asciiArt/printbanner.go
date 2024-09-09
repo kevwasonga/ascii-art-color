@@ -2,6 +2,7 @@ package asciiArt
 
 import (
 	"fmt"
+	"strings"
 
 	"ascii/utils"
 )
@@ -27,30 +28,51 @@ func PrintLineBanner(line, substring, color string, bannerMap map[int][]string) 
 		}
 	}
 
-	// Create a map to identify which characters should be colored
-	colorMap := make(map[rune]bool)
-	for _, char := range substring {
-		colorMap[char] = true
-	}
-
-	// Process each character in the line
-	for _, char := range line {
-		banner, exists := bannerMap[int(char)]
-		if !exists {
-			fmt.Printf("Character %c not found in banner map\n", char)
-			continue
+	// Process the entire string if no substring is provided
+	if substring == "" {
+		for _, char := range line {
+			banner, exists := bannerMap[int(char)]
+			if !exists {
+				fmt.Printf("Character %c not found in banner map\n", char)
+				continue
+			}
+			for i := 0; i < 8; i++ {
+				output[i] += colorCode + banner[i] + resetCode
+			}
 		}
+	} else {
+		// Process each character in the line
+		for i := 0; i < len(line); i++ {
+			char := line[i]
+			banner, exists := bannerMap[int(char)]
+			if !exists {
+				fmt.Printf("Character %c not found in banner map\n", char)
+				continue
+			}
 
-		for i := 0; i < 8; i++ {
-			if substring == "" {
-				// Color the entire text
-				output[i] += colorCode + banner[i] + resetCode
-			} else if colorMap[char] {
-				// Color only the specified substring
-				output[i] += colorCode + banner[i] + resetCode
+			// Check if the current position is part of the substring
+			subStrIndex := strings.Index(line[i:], substring)
+			if subStrIndex == 0 {
+				// Color the substring
+				for j := 0; j < len(substring); j++ {
+					if i+j < len(line) {
+						char := line[i+j]
+						banner, exists := bannerMap[int(char)]
+						if !exists {
+							fmt.Printf("Character %c not found in banner map\n", char)
+							continue
+						}
+						for k := 0; k < 8; k++ {
+							output[k] += colorCode + banner[k] + resetCode
+						}
+					}
+				}
+				i += len(substring) - 1 // Skip past the substring
 			} else {
 				// Regular output for other characters
-				output[i] += banner[i]
+				for k := 0; k < 8; k++ {
+					output[k] += banner[k]
+				}
 			}
 		}
 	}
