@@ -31,13 +31,13 @@ func main() {
 	var lastArg string
 
 	// Check if there are any arguments provided at the 4th index, else allocate it to standard
-	if len(os.Args) == 4 {
+	if len(os.Args) >= 4 {
 		lastArg = "standard" // Default to "standard"
-	} else {
+	} else if len(os.Args) > 3 {
 		lastArg = os.Args[len(os.Args)-1]
 	}
 
-	if !validBannerFiles[lastArg] {
+	if !validBannerFiles[lastArg] && len(os.Args) > 3 {
 		PrintUsage()
 		return
 	}
