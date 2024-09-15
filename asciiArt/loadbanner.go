@@ -20,12 +20,6 @@ func CheckFileSize(fileName string, expectedSize int64) error {
 
 // LoadBannerMap loads the banner map from a file.
 func LoadBannerMap(fileName string) (map[int][]string, error) {
-	// Check file size before loading
-	expectedSize := int64(6623) // Actual expected file size in bytes
-	if err := CheckFileSize(fileName, expectedSize); err != nil {
-		return nil, fmt.Errorf("file corruption detected: %v", err)
-	}
-
 	file, err := os.Open(fileName)
 	if err != nil {
 		return nil, fmt.Errorf("error opening file: %v", err)
